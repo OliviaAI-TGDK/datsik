@@ -1,0 +1,14 @@
+{
+  "base_model": "mistralai/Mistral-7B-v0.1",
+  "output_dir": "./out",
+  "epochs": 1,
+  "train_batch_size": 1,
+  "eval_batch_size": 1,
+  "learning_rate": 2e-5,
+  "save_steps": 10,
+  "eval_steps": 5,
+  "tokenizer": "mistralai/Mistral-7B-v0.1",
+  "lora_rank": 8,
+  "lora_alpha": 16,
+  "lora_dropout": 0.05
+}

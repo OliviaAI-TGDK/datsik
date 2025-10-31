@@ -1,8 +1,8 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="tgdk-datsik",
-    version="1.0.0",
+    name="datsik",
+    version="1.0.5",
     author="TGDK / Sean Tichenor",
     description="Direct Adaptive Trainer for Symbolic Instructional Knowledge",
     packages=find_packages(),
