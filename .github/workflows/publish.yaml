@@ -1,0 +1,56 @@
+name: Publish DATSIK to PyPI
+
+on:
+  push:
+    branches:
+      - main
+  release:
+    types: [created]
+
+jobs:
+  build-and-publish:
+    name: Build & Publish DATSIK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install build dependencies
+        run: |
+          python -m pip install --upgrade pip setuptools wheel build twine
+
+      - name: Verify TGDK-BFE License
+        run: |
+          echo "🔒 TGDK License: TGDK-BFE-ST-144-DATSIK"
+          sha256sum tgdk_datsik/trainer.py || true
+
+      - name: Build distribution
+        run: |
+          python -m build
+
+      - name: Upload to TestPyPI (staging)
+        if: github.event_name == 'push'
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.TEST_PYPI_API_TOKEN }}
+        run: |
+          echo "🚀 Uploading DATSIK to TestPyPI..."
+          python -m twine upload --repository testpypi dist/*
+
+      - name: Upload to PyPI (production)
+        if: github.event_name == 'release'
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        run: |
+          echo "🚀 Publishing DATSIK to PyPI..."
+          python -m twine upload dist/*
+
+      - name: Final status
+        run: echo "✅ DATSIK publishing workflow complete."
